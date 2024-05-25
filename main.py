@@ -1,3 +1,4 @@
+import streamlit as st
 import requests
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -24,8 +25,8 @@ def get_ad_data():
 # Modified send_email function to accept ad data
 def send_email(title, message, recipient, ad_data=None):
     # Email configuration
-    sender_email = 'Ruguillio3@gmail.com'  # Replace with your Gmail address
-    sender_password = 'nkdr zaal parh jkgk'  # Replace with your Gmail password
+    sender_email = 'asddemo4project@gmail.com'  # Replace with your Gmail address
+    sender_password = 'bkxs uqlq pxzo qpbl'  # Replace with your Gmail password
 
     # Create the email message
     email_message = MIMEMultipart('alternative')
@@ -39,23 +40,15 @@ def send_email(title, message, recipient, ad_data=None):
     <html>
     <head>
       <style>
-        .container {{
-          width: 100%;
-          max-width: 600px;
-          margin: 0 auto;
-          padding: 20px;
-          font-family: Arial, sans-serif;
-        }}
-        .image-container img {{
-          max-width: 100%;
-          height: auto;
-        }}
+        body {{ background-color: white; }}
+       .container {{ background-color: lightblue; padding: 20px; border-radius: 10px; }}
+       .image-container {{ margin-top: 20px; }}
       </style>
     </head>
     <body>
       <div class="container">
-        <h1>{title}</h1>
-        <p>{message}</p>
+        <h1 style="color: darkblue;">{title}</h1>
+        <p style="color: darkblue;">{message}</p>
         <div class="image-container">
           <!-- Placeholder for the ad image -->
         </div>
@@ -77,22 +70,19 @@ def send_email(title, message, recipient, ad_data=None):
 
     # Send the email
     try:
-        with smtplib.SMTP('smtp.gmail.com', 587) as server:
-            server.starttls()
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
             server.login(sender_email, sender_password)
-            server.send_message(email_message)
-        print('Email sent successfully!')
+            server.sendmail(sender_email, recipient, email_message.as_string())
+        st.success('Email sent successfully!')
     except Exception as e:
-        print('An error occurred while sending the email:', str(e))
+        st.error(f'An error occurred while sending the email: {str(e)}')
 
-# Get ad data
-ad_data = get_ad_data()
-print("Data from server: ", ad_data)
+# Streamlit UI
+st.title('Send Ad Data Email')
+title = st.text_input('Enter the title:')
+message = st.text_area('Enter the message:')
+recipient = st.text_input('Enter the recipient email address:')
 
-# Prompt the user for input
-title = input('Enter the title:  ')
-message = input('Enter the message:  ')
-recipient = input('Enter the recipient email address: ')
-
-# Send the email with ad data
-send_email(title, message, recipient, ad_data)
+if st.button('Send Email'):
+    ad_data = get_ad_data()
+    send_email(title, message, recipient, ad_data)
