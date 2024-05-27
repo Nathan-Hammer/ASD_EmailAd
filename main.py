@@ -20,7 +20,6 @@ def get_ad_data():
         'tags': tags
     }
     response = requests.post(url, headers=headers, data=data)
-    st.write('Ad Data Response:', response.json())  # Log the ad data response
     return response.json()
 
 # Modified send_email function to accept ad data
@@ -74,10 +73,9 @@ def send_email(title, message, recipient, ad_data=None):
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
             server.login(sender_email, sender_password)
             server.sendmail(sender_email, recipient, email_message.as_string())
-        st.success('Email sent successfully!')
     except Exception as e:
-        st.error(f'An error occurred while sending the email: {str(e)}')
-        st.write(f'Detailed error: {e}')  # Log the detailed error
+        print(f'An error occurred while sending the email: {str(e)}')
+        print(f'Detailed error: {e}')  # Log the detailed error
 
 # Streamlit UI
 st.title('Send Ad Data Email')
